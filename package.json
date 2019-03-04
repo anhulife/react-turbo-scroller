@@ -1,0 +1,43 @@
+{
+  "name": "react-turbo-scroller",
+  "version": "1.0.0",
+  "description": "仿 Twitter 高效的滚动组件",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "files": [
+    "css",
+    "es",
+    "lib",
+    "umd"
+  ],
+  "scripts": {
+    "build": "nwb build-react-component",
+    "clean": "nwb clean-module && nwb clean-demo",
+    "prepublishOnly": "npm run build",
+    "start": "nwb serve-react-demo",
+    "test": "nwb test-react",
+    "test:coverage": "nwb test-react --coverage",
+    "test:watch": "nwb test-react --server"
+  },
+  "dependencies": {
+    "lodash.debounce": "^4.0.8",
+    "prop-types": "^15.7.2"
+  },
+  "peerDependencies": {
+    "react": "16.x",
+    "react-dom": "16.x"
+  },
+  "devDependencies": {
+    "delay": "^4.1.0",
+    "mockjs": "^1.0.1-beta3",
+    "nwb": "0.23.x"
+  },
+  "author": "anhulife",
+  "license": "MIT",
+  "repository": "",
+  "keywords": [
+    "twitter",
+    "scroll",
+    "react-component"
+  ]
+}
