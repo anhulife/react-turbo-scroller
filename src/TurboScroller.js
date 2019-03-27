@@ -127,12 +127,11 @@ class TurboScroller extends React.Component {
       };
     }
 
-    const el = this._turboContainer.current.getWrapperNode();
-    const top = Math.ceil(el.getBoundingClientRect().top);
+    const containerTop = Math.ceil(this._turboContainer.current.measureTop());
 
     const viewportRect = this.props.viewport.getRect();
 
-    viewportRect.top -= top;
+    viewportRect.top -= containerTop;
 
     return viewportRect;
   }

@@ -1,79 +1,66 @@
-import React from 'react';
+import React, { forwardRef, useRef, useCallback, useImperativeHandle } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 import TurboCell from './TurboCell';
 
-class TurboContainer extends React.PureComponent {
-  constructor(props) {
-    super(props);
+const TurboContainer = forwardRef(function TurboContainer(props, ref) {
+  const containerRef = useRef();
+  const cellMeasureHeightMap = useRef(new Map());
 
-    this._cells = new Map();
+  useImperativeHandle(ref, () => ({
+    measureTop() {
+      return containerRef.current.getBoundingClientRect().top;
+    },
 
-    this._view = React.createRef();
-  }
+    /**
+     * 获取列表中各个成员的高度
+     *
+     * @returns {Object} 各个成员的高度
+     */
+    getItemHeights() {
+      return props.list.reduce((heights, itemKey) => {
+        const cellMeasureHeight = cellMeasureHeightMap.current.get(itemKey);
 
-  render() {
-    const { blankSpaceAbove, blankSpaceBelow } = this.props;
-
-    const style = {
-      paddingTop: blankSpaceAbove,
-      paddingBottom: blankSpaceBelow,
-    };
-
-    return (
-      <div
-        ref={this._view}
-        style={style}>
-        {this._renderContent()}
-      </div>
-    );
-  }
-
-  getWrapperNode() {
-    return ReactDOM.findDOMNode(this);
-  }
-
-  /**
-   * 获取列表中各个成员的高度
-   *
-   * @returns {Object} 各个成员的高度
-   */
-  getItemHeights() {
-    return this.props.list.reduce((heights, itemKey) => {
-      const measureHeight = this._cells.get(itemKey);
-
-      if (measureHeight) {
-        const height = measureHeight();
-        if (height !== null) {
-          heights[itemKey] = height;
+        if (cellMeasureHeight) {
+          const height = cellMeasureHeight();
+          if (height !== null) {
+            heights[itemKey] = height;
+          }
         }
-      }
 
-      return heights;
-    }, {});
-  }
+        return heights;
+      }, {});
+    },
+  }));
 
-  _renderContent() {
-    const { list, renderItem } = this.props;
-
-    return list.map(itemKey => (
-      <TurboCell
-        id={itemKey}
-        key={itemKey}
-        render={renderItem}
-        setMeasureHeight={this._setCellMeasureHeight.bind(this)} />
-    ));
-  }
-
-  _setCellMeasureHeight(key, measureHeight) {
+  const setCellMeasureHeight = useCallback((key, measureHeight) => {
     if (measureHeight) {
-      this._cells.set(key, measureHeight);
+      cellMeasureHeightMap.current.set(key, measureHeight);
     } else {
-      this._cells.delete(key);
+      cellMeasureHeightMap.current.delete(key);
     }
-  }
-}
+  });
+
+  const { list, renderItem, blankSpaceAbove, blankSpaceBelow } = props;
+
+  const style = {
+    paddingTop: blankSpaceAbove,
+    paddingBottom: blankSpaceBelow,
+  };
+
+  return (
+    <div ref={containerRef} style={style}>
+      {list.map(itemKey => (
+        <TurboCell
+          id={itemKey}
+          key={itemKey}
+          render={renderItem}
+          setMeasureHeight={setCellMeasureHeight} />
+      ))}
+    </div>
+  );
+});
 
 TurboContainer.propTypes = {
   list: PropTypes.array.isRequired,
