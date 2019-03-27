@@ -1,5 +1,4 @@
 import React, { forwardRef, useRef, useCallback, useImperativeHandle } from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 import TurboCell from './TurboCell';

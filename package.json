@@ -21,16 +21,17 @@
   },
   "dependencies": {
     "lodash.debounce": "^4.0.8",
-    "prop-types": "^15.7.2"
+    "prop-types": "^15.7.2",
+    "react": "^16.8.5"
   },
   "peerDependencies": {
-    "react": "^16.8",
-    "react-dom": "^16.8"
+    "react": "^16.8"
   },
   "devDependencies": {
     "delay": "^4.1.0",
     "mockjs": "^1.0.1-beta3",
-    "nwb": "0.23.x"
+    "nwb": "0.23.x",
+    "react-dom": "^16.8"
   },
   "author": "anhulife",
   "license": "MIT",
