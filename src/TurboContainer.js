@@ -41,9 +41,14 @@ class TurboContainer extends React.PureComponent {
    */
   getItemHeights() {
     return this.props.list.reduce((heights, itemKey) => {
-      const cell = this._cells.get(itemKey);
+      const measureHeight = this._cells.get(itemKey);
 
-      heights[itemKey] = cell ? cell.measureHeight() : 0;
+      if (measureHeight) {
+        const height = measureHeight();
+        if (height !== null) {
+          heights[itemKey] = height;
+        }
+      }
 
       return heights;
     }, {});
@@ -57,13 +62,13 @@ class TurboContainer extends React.PureComponent {
         id={itemKey}
         key={itemKey}
         render={renderItem}
-        setRef={this._setCellRef.bind(this)} />
+        setMeasureHeight={this._setCellMeasureHeight.bind(this)} />
     ));
   }
 
-  _setCellRef(key, ref) {
-    if (ref) {
-      this._cells.set(key, ref);
+  _setCellMeasureHeight(key, measureHeight) {
+    if (measureHeight) {
+      this._cells.set(key, measureHeight);
     } else {
       this._cells.delete(key);
     }
